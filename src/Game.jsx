@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 const Game = () => {
   const [money, setMoney] = useState(1000);
   var [time, setTime] = useState(15);
-  const [winLossUI, setwinLossUI] = useState(false)
+  const [winLossUI, setwinLossUI] = useState(false);
   const [boxColor, setBoxColor] = useState(["green", "blue", "red"]);
   const [resultBox, setresultBox] = useState([
     "",
@@ -41,26 +41,23 @@ const Game = () => {
             return 15;
           }
         });
-        
       }, 1000);
       return () => clearInterval(interval);
     }, []);
-    
   };
   timeComponent();
 
   // bet btn p click krne k baad component-----
-const [Uselected, setUselected] = useState("")
-const [Cselected, setCselected] = useState("")
+  const [Uselected, setUselected] = useState("");
+  const [Cselected, setCselected] = useState("");
   const bet = (i) => {
     setBetUi(true);
-  
-    setUselected(boxColor[i])
+
+    setUselected(boxColor[i]);
 
     var random = Math.floor(Math.random() * 3);
-    
-    setCselected(boxColor[random])
-   
+
+    setCselected(boxColor[random]);
   };
 
   // change monet incraese and dec iss component se honge------------------
@@ -96,39 +93,41 @@ const [Cselected, setCselected] = useState("")
     setBetUi(false);
     setUserSelected(Uselected);
     setCompSelected(Cselected);
-    if(userSelected==compSelected){
-      win()
-    }else{
-      lose()
+    if (userSelected == compSelected) {
+      win();
+    } else {
+      lose();
     }
   };
-const [jeetHaarMsg, setJeetHaarMsg] = useState(false)
+  const [jeetHaarMsg, setJeetHaarMsg] = useState(false);
   const win = () => {
-    
-    setJeetHaarMsg(true)
+    setJeetHaarMsg(true);
   };
   const lose = () => {
-    setJeetHaarMsg(false)
+    setJeetHaarMsg(false);
   };
- 
 
+  const tryAgain = () => {
+    setwinLossUI(false);
+    console.log("chnage money", changeMoney);
+    if (jeetHaarMsg) {
+      setChangeMoney((prev) => {
+        const updated = prev * 2;
+        setMoney(money + updated);
 
-  const tryAgain =()=>{
-    setwinLossUI(false)
-    if(jeetHaarMsg){
-      setChangeMoney(prev => prev * 2)
-      setMoney(prev => prev + changeMoney)
+        setChangeMoney(10);
+      });
     }
-   
-  }
+  };
   // others-----------------
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (userSelected) {
-      if(userSelected==compSelected){
-        win()
-      }else{
-        lose()
+      if (userSelected == compSelected) {
+        win();
+      } else {
+        lose();
       }
     }
   }, [userSelected]);
@@ -137,14 +136,30 @@ const [jeetHaarMsg, setJeetHaarMsg] = useState(false)
     if (time <= 10) {
       setBetUi(false);
     }
-    if(userSelected){{
-      if (time  == 0){
-        setwinLossUI(true);
+    if (userSelected) {
+      {
+        if (time == 0) {
+          setwinLossUI(true);
+        }
+      }
+      if (time == 0) {
+        setresultBox((prev) => {
+          const updated = [...prev];
+          updated[currentIndex] = Cselected;
+          return updated;
+        });
+        setCurrentIndex((prev) => prev + 1);
+        console.log(resultBox)
+        setUselected("");
+        setCselected("");
+        
       }
     }
-
-    }
   }, [time]);
+
+  useEffect(() => {
+  console.log("Updated array:", resultBox);
+}, [resultBox]);
 
   return (
     <div className="min-h-screen bg-[#1b2b36] text-white font-sans font-bold">
@@ -160,24 +175,41 @@ const [jeetHaarMsg, setJeetHaarMsg] = useState(false)
       </header>
 
       {/* win lose ui ------------------------------------*/}
-      {winLossUI ? (<div className="fixed inset-0 z-50 mt-10 bg-opacity-40 flex items-center justify-center">
-        <div className="bg-white w-80 max-w-full rounded-[30px] shadow-xl p-6 flex flex-col justify-between h-[250px]">
-          {/* Red Header */}
-          <div className={`${jeetHaarMsg?"bg-green-500": "bg-red-500"} text-white font-bold text-xl py-3 rounded-[20px] text-center`}>
-            {jeetHaarMsg? "YOU WON":"YOU LOSE"}
-          </div>
-          {/* Amount Section */}
-          <div className={`flex items-center justify-center gap-1 ${jeetHaarMsg?"text-green-500": "text-red-500"} text-4xl font-semibold mt-8`}>
-            <span>{jeetHaarMsg?"+": "-"}₹{changeMoney}</span>
-          </div>
+      {winLossUI ? (
+        <div className="fixed inset-0 z-50 mt-10 bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white w-80 max-w-full rounded-[30px] shadow-xl p-6 flex flex-col justify-between h-[250px]">
+            {/* Red Header */}
+            <div
+              className={`${
+                jeetHaarMsg ? "bg-green-500" : "bg-red-500"
+              } text-white font-bold text-xl py-3 rounded-[20px] text-center`}
+            >
+              {jeetHaarMsg ? "YOU WON" : "YOU LOSE"}
+            </div>
+            {/* Amount Section */}
+            <div
+              className={`flex items-center justify-center gap-1 ${
+                jeetHaarMsg ? "text-green-500" : "text-red-500"
+              } text-4xl font-semibold mt-8`}
+            >
+              <span>
+                {jeetHaarMsg ? "+" : "-"}₹{changeMoney * 2}
+              </span>
+            </div>
 
-          {/* Try Again Button */}
-          <button onClick={tryAgain} className="bg-black text-white font-semibold py-3 rounded-[20px] w-full mt-6 hover:bg-gray-900 transition">
-            try again
-          </button>
+            {/* Try Again Button */}
+            <button
+              onClick={tryAgain}
+              className="bg-black text-white font-semibold py-3 rounded-[20px] w-full mt-6 hover:bg-gray-900 transition"
+            >
+              try again
+            </button>
+          </div>
         </div>
-      </div>):("")}
-      
+      ) : (
+        ""
+      )}
+
       {/* betUi */}
       {betUi ? (
         <div
@@ -258,11 +290,10 @@ const [jeetHaarMsg, setJeetHaarMsg] = useState(false)
             {resultBox.map((value, i) => (
               <div
                 key={i}
-                className="w-20 h-20 rounded-full border-2 border-black"
+                className={`w-20 h-20 rounded-full border-2 bg-${value}-500 border-black`}
               ></div>
             ))}
           </div>
-
         </div>
       </div>
     </div>
