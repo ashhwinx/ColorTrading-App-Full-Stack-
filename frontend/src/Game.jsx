@@ -150,9 +150,8 @@ const Game = () => {
         });
         setCurrentIndex((prev) => prev + 1);
         console.log(resultBox)
-        setUselected("");
         setCselected("");
-        
+        setUserSelected("");
       }
     }
   }, [time]);
@@ -290,7 +289,7 @@ const Game = () => {
             {resultBox.map((value, i) => (
               <div
                 key={i}
-                className={`w-20 h-20 rounded-full border-2 bg-${value}-500 border-black`}
+                className={`w-20 h-20 rounded-full border-2 bg-${value}-900 border-black`}
               ></div>
             ))}
           </div>
