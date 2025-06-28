@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import Game from './Game'
+import Login from './Login'
 
 function App() {
   return (
-    <><Game/></>
+    <>
+    <Game/>
+    <Login/>
+    </>
   )
 }
 
