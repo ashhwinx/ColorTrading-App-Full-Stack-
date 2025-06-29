@@ -1,23 +1,36 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+  const [money, setMoney] = useState(1000);
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const handleSubmit = async () => {
+    try {
+      const userData = {
+        fullName: fullName,
+        email: email,
+        password: password,
+        money,
+      };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("User Data:", formData);
-    // handle signup logic here
+      const response = await axios.post(
+        `http://localhost:4000/users/register`,
+        userData
+      );
+
+      if (response.status === 201) {
+        alert("SignUp Succesfully");
+      }
+
+      setEmail("");
+      setFullName("");
+      setPassword("");
+    } catch (error) {
+      console.error("error agya", error);
+    }
   };
 
   return (
@@ -27,16 +40,18 @@ const Signup = () => {
           Create Account
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-5">
           {/* Name */}
           <div>
             <label className="text-white text-sm">Name</label>
             <input
               type="text"
-              name="name"
+              name="fullName"
               required
-              value={formData.name}
-              onChange={handleChange}
+              value={fullName}
+              onChange={(e) => {
+                setFullName(e.target.value);
+              }}
               placeholder="Enter your name"
               className="w-full mt-1 px-4 py-2 bg-[#334155] text-white rounded-md 
                          focus:outline-none focus:ring-2 focus:ring-orange-400 
@@ -51,8 +66,10 @@ const Signup = () => {
               type="email"
               name="email"
               required
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
               placeholder="Enter your email"
               className="w-full mt-1 px-4 py-2 bg-[#334155] text-white rounded-md 
                          focus:outline-none focus:ring-2 focus:ring-orange-400 
@@ -67,8 +84,10 @@ const Signup = () => {
               type="password"
               name="password"
               required
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               placeholder="Create a password"
               className="w-full mt-1 px-4 py-2 bg-[#334155] text-white rounded-md 
                          focus:outline-none focus:ring-2 focus:ring-orange-400 
@@ -79,12 +98,13 @@ const Signup = () => {
           {/* Submit Button */}
           <button
             type="submit"
+            onClick={handleSubmit}
             className="w-full py-2 bg-orange-500 text-white font-semibold rounded-md 
                        hover:bg-orange-600 transition duration-200"
           >
             Sign Up
           </button>
-        </form>
+        </div>
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Already have an account?{" "}

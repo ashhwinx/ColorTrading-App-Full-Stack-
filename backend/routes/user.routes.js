@@ -10,7 +10,7 @@ router.get("/signin",(req,res)=>{
 
 router.post("/register",userController.registerUser)
 
-router.get("/login",userController.LogInUser)
+router.post("/login",userController.LogInUser)
 
 module.exports = router
 
