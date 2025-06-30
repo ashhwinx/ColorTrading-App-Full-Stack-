@@ -1,11 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
+import {useNavigate , Link} from "react-router-dom"
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [money, setMoney] = useState(1000);
+  const navigate = useNavigate()
 
   const handleSubmit = async () => {
     try {
@@ -23,6 +25,7 @@ const Signup = () => {
 
       if (response.status === 201) {
         alert("SignUp Succesfully");
+        navigate('/')
       }
 
       setEmail("");
@@ -108,9 +111,9 @@ const Signup = () => {
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Already have an account?{" "}
-          <span className="text-orange-400 hover:underline cursor-pointer">
+          <Link to={'/'} className="text-orange-400 hover:underline cursor-pointer">
             Log in
-          </span>
+          </Link>
         </p>
       </div>
     </div>

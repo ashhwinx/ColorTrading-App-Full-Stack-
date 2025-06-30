@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"
+import { useNavigate} from "react-router-dom"
 // import stakeLogo from './'; // Make sure the logo is in your assets folder
 
 const Game =  () => {
   
   const [money, setMoney] = useState(null);
+  const navigate = useNavigate()
       
       const token = localStorage.getItem('token')
+
+      if(!token){
+          navigate("/")
+      }
+
 const hello = async ()=>{
 await axios.get(`http://localhost:4000/users/profile`,{
         headers:{
@@ -31,7 +38,7 @@ await axios.get(`http://localhost:4000/users/profile`,{
 
 
 
-  var [time, setTime] = useState(15);
+  var [time, setTime] = useState(30);
   const [winLossUI, setwinLossUI] = useState(false);
   const [boxColor, setBoxColor] = useState(["green", "blue", "red"]);
   const [resultBox, setresultBox] = useState([
@@ -71,7 +78,7 @@ await axios.get(`http://localhost:4000/users/profile`,{
           if (prev > 0) {
             return prev - 1;
           } else {
-            return 15;
+            return 30;
           }
         });
       }, 1000);
@@ -198,7 +205,7 @@ await axios.get(`http://localhost:4000/users/profile`,{
   }, [userSelected]);
 
   useEffect(() => {
-    if (time==15){
+    if (time==30){
       hello()
     }
     

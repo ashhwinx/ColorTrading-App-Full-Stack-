@@ -1,37 +1,34 @@
 import React, { useState } from "react";
-import axios from "axios"
+import axios from "axios";
+import { useNavigate ,Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
+  const handleSubmit = async () => {
+    try {
+      const userData = {
+        email: email,
+        password: password,
+      };
+      console.log(userData);
 
-  const handleSubmit = async  ()=>{
-    try{
+      const response = await axios.post(
+        "http://localhost:4000/users/login",
+        userData
+      );
 
-      const userData= {
-        email:email,
-        password:password
+      localStorage.setItem("token", response.data.token);
+
+      if (response.status === 201) {
+        navigate("/home");
       }
-      console.log(userData)
-
-      const response =  await axios.post("http://localhost:4000/users/login",userData)
-
-      localStorage.setItem("token",response.data.token)
-
-      if(response.status===201){
-        alert("login done hai")
-      }
-
-
-
-
-    }catch(error){
-      console.error("error agya",error)
+    } catch (error) {
+      console.error("error agya", error);
     }
-  }
-
-  
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4">
@@ -81,9 +78,9 @@ const Login = () => {
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Don't have an account?{" "}
-          <span className="text-orange-400 hover:underline cursor-pointer">
+          <Link to={'/signup'} className="text-orange-400 hover:underline cursor-pointer">
             Sign up
-          </span>
+          </Link>
         </p>
       </div>
     </div>
