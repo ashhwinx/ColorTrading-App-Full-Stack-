@@ -1,7 +1,42 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"
 // import stakeLogo from './'; // Make sure the logo is in your assets folder
 
-const Game = () => {
+const Game =  () => {
+
+  
+  // console.log(token)
+  // axios.get('http://localhost:4000/users/profile',{
+    //   headers:{
+      //          Authorization: `Bearer ${token}`
+      //   }
+      // })
+      
+      const token = localStorage.getItem('token')
+const hello = async ()=>{
+await axios.get(`http://localhost:4000/users/profile`,{
+        headers:{
+            Authorization: `Bearer ${token}`,
+        }
+    }).then(response=>{
+     
+      console.log(response.status)
+      if(response.status===200){
+        const data = response.data
+        console.log(data)
+      
+    }}).catch(err=>{
+      console.log(err)
+    }) 
+}
+
+    
+  
+    
+
+
+
+
   const [money, setMoney] = useState(1000);
   var [time, setTime] = useState(15);
   const [winLossUI, setwinLossUI] = useState(false);
@@ -29,6 +64,11 @@ const Game = () => {
     blue: "bg-blue-900",
     red: "bg-red-900",
   };
+
+
+
+
+
   // time component-----
 
   const timeComponent = async () => {
@@ -133,8 +173,15 @@ const Game = () => {
   }, [userSelected]);
 
   useEffect(() => {
+    if (time==15){
+      hello()
+    }
+    
+
+
     if (time <= 10) {
       setBetUi(false);
+     
     }
     if (userSelected) {
       {
@@ -157,7 +204,7 @@ const Game = () => {
   }, [time]);
 
   useEffect(() => {
-  console.log("Updated array:", resultBox);
+  // console.log("Updated array:", resultBox);
 }, [resultBox]);
 
   return (

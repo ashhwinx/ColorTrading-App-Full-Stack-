@@ -61,3 +61,8 @@ module.exports.LogInUser = async (req,res,next)=>{
 
    
 }
+
+
+module.exports.profile = async (req,res,next)=>{
+    res.status(200).json(req.user)
+}

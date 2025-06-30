@@ -6,9 +6,9 @@ import Signup from './Signup'
 function App() {
   return (
     <>
-    {/* <Game/> */}
+    <Signup/>
     <Login/>
-    {/* <Signup/> */}
+    <Game/>
     </>
   )
 }

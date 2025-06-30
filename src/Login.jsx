@@ -1,37 +1,14 @@
 import React, { useState } from "react";
-import axios from "axios"
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-
-  const handleSubmit = async  ()=>{
-    try{
-
-      const userData= {
-        email:email,
-        password:password
-      }
-      console.log(userData)
-
-      const response =  await axios.post("http://localhost:4000/users/login",userData)
-
-      localStorage.setItem("token",response.data.token)
-
-      if(response.status===201){
-        alert("login done hai")
-      }
-
-
-
-
-    }catch(error){
-      console.error("error agya",error)
-    }
-  }
-
-  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Email:", email, "Password:", password);
+    // Handle login here
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4">
@@ -40,7 +17,7 @@ const Login = () => {
           Login
         </h2>
 
-        <div className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="text-white text-sm">Email</label>
             <input
@@ -71,13 +48,12 @@ const Login = () => {
 
           <button
             type="submit"
-            onClick={handleSubmit}
             className="w-full py-2 bg-orange-500 text-white font-semibold rounded-md 
                        hover:bg-orange-600 transition duration-200"
           >
             Log In
           </button>
-        </div>
+        </form>
 
         <p className="text-center text-sm text-gray-400 mt-4">
           Don't have an account?{" "}
