@@ -15,7 +15,7 @@ const Game =  () => {
       }
 
 const hello = async ()=>{
-await axios.get(`http://localhost:4000/users/profile`,{
+await axios.get(`https://colortrading-app-full-stack.onrender.com/users/profile`,{
         headers:{
            Authorization: `Bearer ${token}`,
         }
@@ -131,7 +131,7 @@ await axios.get(`http://localhost:4000/users/profile`,{
   const done = async () => {
 
     const res = await axios.put(
-      "http://localhost:4000/users/update",
+      "https://colortrading-app-full-stack.onrender.com/users/update",
       {
         money : money - changeMoney
       },
@@ -174,7 +174,7 @@ await axios.get(`http://localhost:4000/users/profile`,{
         const updated = prev * 2;
 
            const res = await axios.put(
-      "http://localhost:4000/users/update",
+      "https://colortrading-app-full-stack.onrender.com/users/update",
       {
         money : money + updated
       },

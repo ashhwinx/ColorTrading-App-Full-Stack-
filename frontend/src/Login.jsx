@@ -17,7 +17,7 @@ const Login = () => {
         password: password,
       };
 
-      const response = await axios.post("http://localhost:4000/users/login", userData);
+      const response = await axios.post("https://colortrading-app-full-stack.onrender.com/users/login", userData);
 
       if (response.status === 201) {
         localStorage.setItem("token", response.data.token);

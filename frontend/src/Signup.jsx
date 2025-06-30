@@ -21,7 +21,7 @@ const Signup = () => {
         money,
       };
 
-      const response = await axios.post(`http://localhost:4000/users/register`, userData);
+      const response = await axios.post(`https://colortrading-app-full-stack.onrender.com/users/register`, userData);
 
       if (response.status === 201) {
         alert("SignUp Successfully");
