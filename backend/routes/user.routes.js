@@ -15,5 +15,7 @@ router.post("/login",userController.LogInUser)
 
 router.get("/profile",userMiddleware.authUser, userController.profile)
 
+router.put('/update',userMiddleware.authUser, userController.update)
+
 module.exports = router
 

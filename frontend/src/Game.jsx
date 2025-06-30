@@ -3,27 +3,21 @@ import axios from "axios"
 // import stakeLogo from './'; // Make sure the logo is in your assets folder
 
 const Game =  () => {
-
   
-  // console.log(token)
-  // axios.get('http://localhost:4000/users/profile',{
-    //   headers:{
-      //          Authorization: `Bearer ${token}`
-      //   }
-      // })
+  const [money, setMoney] = useState(null);
       
       const token = localStorage.getItem('token')
 const hello = async ()=>{
 await axios.get(`http://localhost:4000/users/profile`,{
         headers:{
-            Authorization: `Bearer ${token}`,
+           Authorization: `Bearer ${token}`,
         }
     }).then(response=>{
      
-      console.log(response.status)
+      
       if(response.status===200){
         const data = response.data
-        console.log(data)
+        setMoney(data.money)
       
     }}).catch(err=>{
       console.log(err)
@@ -37,7 +31,6 @@ await axios.get(`http://localhost:4000/users/profile`,{
 
 
 
-  const [money, setMoney] = useState(1000);
   var [time, setTime] = useState(15);
   const [winLossUI, setwinLossUI] = useState(false);
   const [boxColor, setBoxColor] = useState(["green", "blue", "red"]);
@@ -129,6 +122,25 @@ await axios.get(`http://localhost:4000/users/profile`,{
   // done and winner choose----------------
 
   const done = async () => {
+
+    const res = await axios.put(
+      "http://localhost:4000/users/update",
+      {
+        money : money - changeMoney
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log("Updated user:", res.data.user);
+
+
+
+
+
     setMoney(money - changeMoney);
     setBetUi(false);
     setUserSelected(Uselected);
@@ -147,12 +159,25 @@ await axios.get(`http://localhost:4000/users/profile`,{
     setJeetHaarMsg(false);
   };
 
-  const tryAgain = () => {
+  const tryAgain = async () => {
     setwinLossUI(false);
     console.log("chnage money", changeMoney);
     if (jeetHaarMsg) {
-      setChangeMoney((prev) => {
+      setChangeMoney(async (prev) => {
         const updated = prev * 2;
+
+           const res = await axios.put(
+      "http://localhost:4000/users/update",
+      {
+        money : money + updated
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
         setMoney(money + updated);
 
         setChangeMoney(10);

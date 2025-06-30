@@ -1,68 +1,76 @@
-const userModel = require('../model/user.model')
-const userService = require("../services/user.services")
+const userModel = require("../model/user.model");
+const userService = require("../services/user.services");
 
+module.exports.registerUser = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { fullName, email, password, money } = req.body;
 
-module.exports.registerUser = async (req,res,next)=>{
-    try{
-        console.log(req.body)
-        const {fullName,email,password,money} = req.body
+    isUserAlready = await userModel.findOne({ email });
 
-    isUserAlready = await userModel.findOne({email})
-
-    if (isUserAlready){
-        return res.status(400).json({message: 'user already exist'})
+    if (isUserAlready) {
+      return res.status(400).json({ message: "user already exist" });
     }
 
-    const hasedPassword  = await userModel.hashPassword(password)
+    const hasedPassword = await userModel.hashPassword(password);
 
     const user = await userService.createUser({
-        fullName,
-        email,
-        password:hasedPassword,
-        money
-    })
+      fullName,
+      email,
+      password: hasedPassword,
+      money,
+    });
 
     const token = user.generateAuthToken();
 
-    return res.status(201).json({token,user})
-    } catch (error){
-        return res.status(500).json({message: 'Server error', error: error.message})
-    }
-}
+    return res.status(201).json({ token, user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
+};
 
+module.exports.LogInUser = async (req, res, next) => {
+  const { email, password } = req.body;
 
-module.exports.LogInUser = async (req,res,next)=>{
-   
-        const {email,password} = req.body
+  user = await userModel.findOne({ email }).select("+password");
 
-        user = await userModel.findOne({email}).select("+password")
+  if (!user) {
+    return res.status(400).json({ message: "credentials are worng" });
+  }
 
+  const isMatch = await user.comparePassword(password);
+  console.log(isMatch);
 
-        if(!user){
-            return res.status(400).json({message:"credentials are worng"})
-        }
+  if (!isMatch) {
+    return res.status(401).json({ message: "isMtach are worng" });
+  }
 
-        const isMatch = await user.comparePassword(password)
-        console.log(isMatch)
+  token = user.generateAuthToken();
 
-        if(!isMatch){
-            return res.status(401).json({message:"isMtach are worng"})
-        }
+  res.cookie("token", token);
 
+  res.status(201).json({ token, user });
+};
 
-         token = user.generateAuthToken()
+module.exports.profile = async (req, res, next) => {
+  res.status(200).json(req.user);
+};
 
-         res.cookie('token',token)
+module.exports.update = async (req, res, next) => {
+  try {
+    const updates = req.body;
 
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.user._id,
+      { $set: updates },
+      { new: true }
+    );
 
-
-         res.status(201).json({token,user})
-
-
-   
-}
-
-
-module.exports.profile = async (req,res,next)=>{
-    res.status(200).json(req.user)
-}
+    res.status(200).json({ message: "Profile updated", user: updatedUser });
+  } catch (error) {
+    console.error("Update error:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
